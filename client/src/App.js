@@ -26,7 +26,7 @@ function App() {
             <Routes>
               <Route path="/" exact element={<Home />} />
               <Route path="/login" exact element={<Login />} />
-              <Route path="/account" exact element={<Account />} />
+              <Route path="/account" exact element={<ProtectedRoute><Account /></ProtectedRoute>} />
             </Routes>
           </div>
         </AuthProvider>
