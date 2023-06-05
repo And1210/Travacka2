@@ -24,3 +24,11 @@
 .account-book-sec {
   grid-area: 1 / 2 / 2 / 3;
 }
+
+.account-countries-container {
+  position: relative;
+  top: 40px;
+  left: 0;
+  width: 600px;
+  height: 400px;
+}

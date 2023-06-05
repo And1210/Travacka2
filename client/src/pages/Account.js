@@ -117,9 +117,11 @@ function Account() {
             <form method="POST" onSubmit={handlePersonalSubmit}>
               <label>Name:</label><input type="text" name="name" defaultValue={name || ''} onChange={(event) => setName(event.target.value)} required />
               <label>Bio:</label><textarea name="bio" defaultValue={bio || ''} onChange={(event) => setBio(event.target.value)} required />
-              <SelectionMap desiredCountries={countries} onCountryClick={handleCountryClick}/>
               <button type="submit">Update</button>
             </form>
+            <div className="account-countries-container">
+              <SelectionMap desiredCountries={countries} onCountryClick={handleCountryClick}/>
+            </div>
             {accountStatus.length > 0 && (
               <div>{accountStatus}</div>
             )}

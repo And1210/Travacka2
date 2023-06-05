@@ -25,6 +25,7 @@ function SelectionMap({desiredCountries, onCountryClick}) {
 
   return (
       <ComposableMap
+        className="countries-map"
         width={800}
         height={400}
         projection="geoAzimuthalEqualArea"

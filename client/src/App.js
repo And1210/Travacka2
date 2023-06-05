@@ -5,7 +5,9 @@ import ProtectedRoute from './components/ProtectedRoute.js';
 
 import Navbar from './Navbar.js';
 import Home from './pages/Home.js';
+import Gallery from './pages/Gallery.js';
 import Login from './pages/Login.js';
+import Upload from './pages/Upload.js';
 import Account from './pages/Account.js';
 
 import './App.css';
@@ -25,7 +27,9 @@ function App() {
             <Navbar />
             <Routes>
               <Route path="/" exact element={<Home />} />
+              <Route path="/gallery" exact element={<Gallery />} />
               <Route path="/login" exact element={<Login />} />
+              <Route path="/upload" exact element={<ProtectedRoute><Upload /></ProtectedRoute>} />
               <Route path="/account" exact element={<ProtectedRoute><Account /></ProtectedRoute>} />
             </Routes>
           </div>

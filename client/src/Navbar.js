@@ -52,6 +52,7 @@ function Navbar() {
     <Nav>
       <NavLinks>
         <NavLink to="/">Home</NavLink>
+        <NavLink to="/gallery">Gallery</NavLink>
         {loggedIn && (<NavLink to="/upload">Upload</NavLink>)}
         {loggedIn && (<NavLink to="/account">Account</NavLink>)}
       </NavLinks>

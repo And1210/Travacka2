@@ -24,6 +24,8 @@ const DB_PASS = process.env.DB_PASS;
 const DB_URL = process.env.DB_URL;
 const DB_CONNECT_URI = `mongodb+srv://${DB_USER}:${DB_PASS}@${DB_URL}?retryWrites=true&w=majority`;
 
+const GEOAPIFY_KEY = process.env.GEOAPIFY_KEY;
+
 //Database
 mongoose.connect(DB_CONNECT_URI, {
   useNewUrlParser: true,
@@ -50,6 +52,7 @@ const upload = multer({storage: storage});
 //DB models
 const Personal = require('./models/Personal.js');
 const Book = require('./models/Book.js');
+const Media = require('./models/Media.js');
 
 //------- Serving Routes --------
 
@@ -116,6 +119,98 @@ server.post('/account_update', (req, res, next) => {
     .catch((err) => {
       console.log(err);
       res.json({success: false, message: 'Error in updating account, please try again'});
+    });
+});
+
+//Images
+server.post('/upload_img', upload.single('img'), async (req, res, next) => {
+  let coords = req.body.coords;
+  let date = req.body.date;
+  let api_url = '';
+
+  //Parse coordinates from string
+  if (coords.length > 0) {
+    coords = coords.split(',').map((coord) => parseFloat(coord));
+    api_url = `https://api.geoapify.com/v1/geocode/reverse?lat=${coords[1]}&lon=${coords[0]}&format=json&apiKey=${GEOAPIFY_KEY}`;
+  } else {
+    coords = [];
+  }
+
+  //Get location from coordinates
+  let location = "";
+  if (api_url.length > 0) {
+    try {
+      let data = await fetch(api_url, {method: 'GET'}).then(res => res.json());
+      location = data.results[0].country;
+    } catch {
+      location = "";
+    }
+  }
+
+  //Setup json to save to db
+  let dataObj = {
+    media_type: 'IMAGE',
+    date: date,
+    filename: req.file.filename,
+    description: '',
+    url: `uploads/${req.file.filename}`,
+    coords: coords,
+    location: location
+  };
+
+  //Write to db
+  Media.create(dataObj)
+    .then((result) => {
+      res.json({
+        'message': 'Successfully upload image',
+        'success': true
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.json({
+        'message': 'Failed to save image data',
+        'success': false
+      });
+    });
+
+});
+
+server.post('/get_imgs', (req, res, next) => {
+  const {location} = req.body;
+
+  let searchObj = {
+    location: location
+  };
+
+  Media.find(searchObj)
+    .then((result) => {
+      res.json({
+        'message': 'Media found',
+        'success': true,
+        'data': result
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.json({
+        'message': 'Invalid location provided, error on media fetch',
+        'success': false
+      });
+    });
+});
+
+server.post('/get_countries', (req, res, next) => {
+  Media.find().distinct('location')
+    .then((result) => {
+      let emptyInd = result.indexOf('');
+      if (emptyInd >= 0) {
+        result.splice(emptyInd, 1);
+      }
+      res.json(result);
+    })
+    .catch((err) => {
+      console.log(err);
     });
 });
 
