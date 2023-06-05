@@ -9,11 +9,14 @@ import '../styles/Home.css';
 import headshot from '../imgs/headshot.jpg';
 import bannerImg from '../imgs/banner.jpg'
 
+const geoname = require('../helpers/geoname_to_svgname_map.js');
+
 const API_ROUTE = process.env.REACT_APP_API_URL;
 
 function Home() {
   const [personal, setPersonal] = useState({});
   const [bookData, setBookData] = useState([]);
+  const [visitedCountries, setVisitedCountries] = useState([]);
 
   useEffect(() => {
     axios.post(`${API_ROUTE}/account`, {}, {
@@ -41,6 +44,25 @@ function Home() {
     }).catch((err) => {
       console.log(err);
     });
+
+    axios.post(`${API_ROUTE}/get_countries`, {}, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then((res) => {
+      let newCountries = [];
+      for (let c of res.data) {
+        if (geoname.checkValidName(c)) {
+          let toAdd = geoname.svg2geo(c);
+          for (let t of toAdd) {
+            newCountries.push(t);
+          }
+        }
+      }
+      setVisitedCountries(newCountries);
+    }).catch((err) => {
+      console.log(err);
+    })
   }, []);
 
   // <div className="page-title center-text-img">
@@ -65,7 +87,7 @@ function Home() {
 
           <div className="grid-item countries-sec">
             <div className="countries-container">
-              <DestinationMap desiredCountries={personal.countries} visitedCountries={[]} />
+              <DestinationMap desiredCountries={personal.countries} visitedCountries={visitedCountries} />
             </div>
           </div>
 
