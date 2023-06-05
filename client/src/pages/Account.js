@@ -11,7 +11,13 @@ function Account() {
   const [name, setName] = useState('');
   const [bio, setBio] = useState('');
   const [countries, setCountries] = useState([]);
-  const [status, setStatus] = useState('');
+  const [accountStatus, setAccountStatus] = useState('');
+
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [url, setUrl] = useState('');
+  const [bookStatus, setBookStatus] = useState('');
+  const [bookData, setBookData] = useState([]);
 
   const handleCountryClick = (name) => {
     let tmpCountries = [...countries];
@@ -23,7 +29,7 @@ function Account() {
     setCountries(tmpCountries);
   }
 
-  const handleSubmit = (event) => {
+  const handlePersonalSubmit = (event) => {
     event.preventDefault();
 
     const accountObj = {
@@ -38,12 +44,46 @@ function Account() {
       }
     }).then((res) => {
       console.log(res);
-      setStatus(res.data.message);
+      setAccountStatus(res.data.message);
     }).catch((err) => {
       console.log(err);
-      setStatus('Error occured');
+      setAccountStatus('Error occured');
     });
   };
+
+  const handleBookSubmit = (event) => {
+    event.preventDefault();
+
+    const bookObj = {
+      title: title,
+      author: author,
+      url: url
+    };
+
+    axios.post(`${API_ROUTE}/add_book`, bookObj, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then((res) => {
+      console.log(res);
+      setBookStatus(res.data.message);
+      axios.post(`${API_ROUTE}/get_books`, {}, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then((res) => {
+        setBookData(res.data);
+      }).catch((err) => {
+        console.log(err);
+      });
+    }).catch((err) => {
+      console.log(err);
+      setBookStatus('Error occured');
+    });
+    setTimeout(() => {
+      setBookStatus('');
+    }, 3000);
+  }
 
   useEffect(() => {
     axios.post(`${API_ROUTE}/account`, {}, {
@@ -57,20 +97,50 @@ function Account() {
     }).catch((err) => {
       console.log(err);
     });
+
+    axios.post(`${API_ROUTE}/get_books`, {}, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then((res) => {
+      setBookData(res.data);
+    }).catch((err) => {
+      console.log(err);
+    });
   }, []);
 
   return (
     <div>
-      <div className="form-wrapper">
-        <form method="POST" onSubmit={handleSubmit}>
-          <label>Name:</label><input type="text" name="name" defaultValue={name || ''} onChange={(event) => setName(event.target.value)} required />
-          <label>Bio:</label><textarea name="bio" defaultValue={bio || ''} onChange={(event) => setBio(event.target.value)} required />
-          <SelectionMap desiredCountries={countries} onCountryClick={handleCountryClick}/>
-          <button type="submit">Update</button>
-        </form>
-        {status.length > 0 && (
-          <div>{status}</div>
-        )}
+      <div className="account-grid-container">
+        <div className="account-grid-item account-personal-sec">
+          <div className="form-wrapper">
+            <form method="POST" onSubmit={handlePersonalSubmit}>
+              <label>Name:</label><input type="text" name="name" defaultValue={name || ''} onChange={(event) => setName(event.target.value)} required />
+              <label>Bio:</label><textarea name="bio" defaultValue={bio || ''} onChange={(event) => setBio(event.target.value)} required />
+              <SelectionMap desiredCountries={countries} onCountryClick={handleCountryClick}/>
+              <button type="submit">Update</button>
+            </form>
+            {accountStatus.length > 0 && (
+              <div>{accountStatus}</div>
+            )}
+          </div>
+        </div>
+        <div className="account-grid-item account-book-sec">
+          <div className="form-wrapper">
+            <form method="POST" onSubmit={handleBookSubmit}>
+              <label>Title:</label><input type="text" name="title" onChange={(event) => setTitle(event.target.value)} required />
+              <label>Author:</label><input type="text" name="author" onChange={(event) => setAuthor(event.target.value)} required />
+              <label>Cover Image Url:</label><input type="text" name="cover_img_url" onChange={(event) => setUrl(event.target.value)} required />
+              <button type="submit">Add Book</button>
+            </form>
+            {bookStatus.length > 0 && (
+              <div>{bookStatus}</div>
+            )}
+          </div>
+          {bookData.length > 0 && bookData.map((book) =>
+            <div>{book.title} by {book.author}</div>
+          )}
+        </div>
       </div>
     </div>
   );

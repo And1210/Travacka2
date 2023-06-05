@@ -20,6 +20,7 @@ function DestinationMap({visitedCountries, desiredCountries}) {
 
   const visitedColour = '#4F8A6D';
   const toVisitColour = '#306178';
+  const highlightColour = '#D0CFDA';
   const defaultColour = '#9998A3';
 
   const fillDest = (name) => {
@@ -34,6 +35,7 @@ function DestinationMap({visitedCountries, desiredCountries}) {
 
   return (
       <ComposableMap
+        className="countries-map" 
         width={800}
         height={400}
         projection="geoAzimuthalEqualArea"
@@ -56,7 +58,10 @@ function DestinationMap({visitedCountries, desiredCountries}) {
                     outline: "none",
                     fill: fillDest(geo.properties.geounit)
                   },
-                  hover: { outline: "none" },
+                  hover: {
+                    outline: "none",
+                    fill: highlightColour
+                  },
                   pressed: { outline: "none" },
                 }}
               />

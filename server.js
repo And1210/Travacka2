@@ -49,6 +49,7 @@ const upload = multer({storage: storage});
 
 //DB models
 const Personal = require('./models/Personal.js');
+const Book = require('./models/Book.js');
 
 //------- Serving Routes --------
 
@@ -116,6 +117,46 @@ server.post('/account_update', (req, res, next) => {
       console.log(err);
       res.json({success: false, message: 'Error in updating account, please try again'});
     });
+});
+
+//Books
+server.post('/add_book', (req, res, next) => {
+  const {title, author, url} = req.body;
+
+  let data = {
+    title: title,
+    author: author,
+    cover_img_link: url
+  };
+
+  Book.create(data)
+    .then((result) => {
+      res.json({
+        message: 'Book successfully added to collection',
+        success: true
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+server.post('/get_books', (req, res, next) => {
+  Book.find({})
+    .then((result) => {
+      let out = [];
+      for (let d of result) {
+        let cur = {};
+        cur.title = d.title;
+        cur.author = d.author;
+        cur.url = d.cover_img_link;
+        out.push(cur);
+      }
+      res.json(out);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
 });
 
 server.listen(PORT, () => {

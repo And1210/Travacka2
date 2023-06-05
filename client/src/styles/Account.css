@@ -1,3 +1,26 @@
 .form-wrapper {
   margin: 1rem auto;
 }
+
+/* Grid Stuff */
+.account-grid-container {
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 2fr 1fr;
+  grid-gap: 0px;
+}
+
+.account-grid-item {
+  margin: 10px;
+  padding: 10px 25px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+.account-personal-sec {
+  grid-area: 1 / 1 / 2 / 2;
+}
+
+.account-book-sec {
+  grid-area: 1 / 2 / 2 / 3;
+}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 import DestinationMap from '../components/DestinationMap.js';
+import BookCard from '../components/BookCard.js';
 
 import '../styles/Home.css';
 
@@ -12,6 +13,7 @@ const API_ROUTE = process.env.REACT_APP_API_URL;
 
 function Home() {
   const [personal, setPersonal] = useState({});
+  const [bookData, setBookData] = useState([]);
 
   useEffect(() => {
     axios.post(`${API_ROUTE}/account`, {}, {
@@ -25,6 +27,17 @@ function Home() {
         countries: res.data.countries
       };
       setPersonal(data);
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    axios.post(`${API_ROUTE}/get_books`, {}, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then((res) => {
+      console.log(res.data);
+      setBookData(res.data);
     }).catch((err) => {
       console.log(err);
     });
@@ -51,7 +64,18 @@ function Home() {
           )}
 
           <div className="grid-item countries-sec">
-            <DestinationMap desiredCountries={personal.countries} visitedCountries={[]} />
+            <div className="countries-container">
+              <DestinationMap desiredCountries={personal.countries} visitedCountries={[]} />
+            </div>
+          </div>
+
+          <div className="grid-item books-sec">
+            <h3>The Books I've Read (count: {bookData.length})</h3>
+            <div className="books-container">
+              {bookData.map((book) =>
+                <BookCard title={book.title} author={book.author} url={book.url} />
+              )}
+            </div>
           </div>
         </div>
       </div>
