@@ -89,8 +89,11 @@ function Gallery() {
       {selectedCountry.length == 0 && (
         <div className="gallery-selection-grid">
           <div className="gallery-selection-item">
-            <div className="countries-container">
-              <SelectionMap desiredCountries={hoverCountry} onCountryClick={() => {}} />
+            <h1>Choose A Country To See All My Photos!</h1>
+            <div className="gallery-countries-container">
+              <div className="countries-container">
+                <SelectionMap desiredCountries={hoverCountry} onCountryClick={() => {}} />
+              </div>
             </div>
           </div>
           <div className="gallery-selection-item country-list">
