@@ -1,6 +1,6 @@
-let geonames = ['Austria', 'Croatia', 'CzechRepublic', 'Denmark', 'England', 'Finland', 'France',
+let geonames = ['Austria', 'Croatia', 'CzechRepublic', 'Denmark', 'England', 'Finland', 'FlemishRegion', 'France',
   'Germany', 'Greece', 'Hungary', 'Iceland', 'Ireland', 'Italy', 'Netherlands', 'NorthernIreland',
-  'Norway', 'Portugal', 'Romania', 'Scotland', 'Spain', 'Sweden', 'Switzerland', 'Wales'];
+  'Norway', 'Portugal', 'Romania', 'Scotland', 'Spain', 'Sweden', 'Switzerland', 'Wales', 'WalloonRegion'];
 
 let geo2svgmap = {
   'Austria': 'Austria',
@@ -9,6 +9,7 @@ let geo2svgmap = {
   'Denmark': 'Denmark',
   'England': 'United Kingdom',
   'Finland': 'Finland',
+  'FlemishRegion': 'Belgium',
   'France': 'France',
   'Germany': 'Germany',
   'Greece': 'Greece',
@@ -25,17 +26,20 @@ let geo2svgmap = {
   'Spain': 'Spain',
   'Sweden': 'Sweden',
   'Switzerland': 'Switzerland',
-  'Wales': 'United Kingdom'
+  'Wales': 'United Kingdom',
+  'WalloonRegion': 'Belgium'
 };
 
 function geo2svg(geo) {
   return geo2svgmap[geo];
 }
 function svg2geo(svg) {
-  if (svg != 'United Kingdom') {
-    return [svg.replace(' ', '')];
-  } else {
+  if (svg == 'United Kingdom') {
     return ['England', 'Wales', 'Scotland', 'NorthernIreland'];
+  } else if (svg == 'Belgium') {
+    return ['FlemishRegion', 'WalloonRegion'];
+  } else {
+    return [svg.replace(' ', '')];
   }
 }
 

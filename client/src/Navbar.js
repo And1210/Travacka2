@@ -53,7 +53,7 @@ function Navbar() {
       <NavLinks>
         <NavLink to="/">Home</NavLink>
         <NavLink to="/gallery">Gallery</NavLink>
-        <NavLink to="/map">Map</NavLink>
+        <NavLink to="/blog">Blog</NavLink>
         {loggedIn && (<NavLink to="/upload">Upload</NavLink>)}
         {loggedIn && (<NavLink to="/account">Account</NavLink>)}
       </NavLinks>

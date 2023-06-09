@@ -6,6 +6,7 @@ import ProtectedRoute from './components/ProtectedRoute.js';
 import Navbar from './Navbar.js';
 import Home from './pages/Home.js';
 import Gallery from './pages/Gallery.js';
+import Blog from './pages/Blog.js';
 import Map from './pages/Map.js';
 import Login from './pages/Login.js';
 import Upload from './pages/Upload.js';
@@ -29,6 +30,7 @@ function App() {
             <Routes>
               <Route path="/" exact element={<Home />} />
               <Route path="/gallery" exact element={<Gallery />} />
+              <Route path="/blog" exact element={<Blog />} />
               <Route path="/map" exact element={<Map />} />
               <Route path="/login" exact element={<Login />} />
               <Route path="/upload" exact element={<ProtectedRoute><Upload /></ProtectedRoute>} />
