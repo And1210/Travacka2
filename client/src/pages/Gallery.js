@@ -11,9 +11,11 @@ const geoname = require('../helpers/geoname_to_svgname_map.js');
 const API_ROUTE = process.env.REACT_APP_API_URL;
 
 function Gallery() {
+  //Selection variables
   const [countries, setCountries] = useState([]);
   const [hoverCountry, setHoverCountry] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState('');
+  //Image variables
   const [imgData, setImgData] = useState([]);
   const [dataLength, setDataLength] = useState(0);
 

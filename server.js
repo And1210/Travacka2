@@ -53,6 +53,7 @@ const upload = multer({storage: storage});
 const Personal = require('./models/Personal.js');
 const Book = require('./models/Book.js');
 const Media = require('./models/Media.js');
+const Blog = require('./models/Blog.js');
 
 //------- Serving Routes --------
 
@@ -252,6 +253,92 @@ server.post('/get_books', (req, res, next) => {
     .catch((err) => {
       console.log(err);
     })
+});
+
+//Blog
+server.post('/generate_blogs', (req, res, next) => {
+  let {country} = req.body;
+
+  let searchObj = {
+    'location': country
+  };
+
+  Media.find(searchObj).sort({date: 1})
+    .then(async (result) => {
+      let date_data = {};
+      for (let r of result) {
+        let date_str = (new Date(r.date)).toISOString().substring(0, 10);
+        if (!date_data[date_str]) {
+          date_data[date_str] = {};
+          date_data[date_str].date = date_str;
+          date_data[date_str].media_count = 1;
+          date_data[date_str].img_urls = [r.url];
+          date_data[date_str].coords = r.coords;
+          date_data[date_str].location = country;
+        } else {
+          date_data[date_str].media_count += 1;
+          if (!r.url.includes('.mp4')) {
+            date_data[date_str].img_urls.push(r.url);
+
+            let cur_coord = date_data[date_str].coords;
+            let weight_fac = date_data[date_str].img_urls.length/(date_data[date_str].img_urls.length+1);
+            date_data[date_str].coords = [cur_coord[0]*weight_fac+r.coords[0]*(1-weight_fac),
+                                         cur_coord[1]*weight_fac+r.coords[1]*(1-weight_fac)];
+
+            // if (sample_count >= 0 && date_data[date_str].urls.length < sample_count) {
+            //   date_data[date_str].urls.push(r.url);
+            // } else if (sample_count < 0) {
+            //   date_data[date_str].urls.push(r.url);
+            // }
+          }
+        }
+      }
+
+      for (let key of Object.keys(date_data)) {
+        let d = date_data[key];
+        //Add specific location tracking later if wanted
+        // if (d.coords.length > 0) {
+        //   let api_url = `https://api.geoapify.com/v1/geocode/reverse?lat=${coords[1]}&lon=${coords[0]}&format=json&apiKey=${GEOAPIFY_KEY}`;
+        //
+        // }
+
+        let searchObj = {
+          date: d.date
+        };
+        let update = d;
+        let options = {
+          upsert: true
+        };
+
+        let data_handle = await Blog.findOneAndUpdate(searchObj, update, options);
+      }
+
+      res.send({
+        message: `${country} blog posts successfully created/updated`,
+        success: true
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.json(err);
+    });
+});
+
+server.post('/get_blogs', (req, res, next) => {
+  const {country} = req.body;
+
+  let searchObj = {
+    location: country
+  };
+
+  Blog.find(searchObj)
+    .then((result) => {
+      res.json(result);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.json(err);
+    });
 });
 
 server.listen(PORT, () => {

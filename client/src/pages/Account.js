@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 
 import SelectionMap from '../components/SelectionMap.js';
+import LoadingBar from '../components/LoadingBar.js';
 
 import '../styles/Account.css';
 
@@ -12,12 +13,16 @@ function Account() {
   const [bio, setBio] = useState('');
   const [countries, setCountries] = useState([]);
   const [accountStatus, setAccountStatus] = useState('');
+  const [savedCountries, setSavedCountries] = useState([]);
 
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
   const [bookStatus, setBookStatus] = useState('');
   const [bookData, setBookData] = useState([]);
+
+  const [blogDoneCount, setBlogDoneCount] = useState(0);
+  const [blogTotalCount, setBlogTotalCount] = useState(1);
 
   const handleCountryClick = (name) => {
     let tmpCountries = [...countries];
@@ -85,6 +90,25 @@ function Account() {
     }, 3000);
   }
 
+  const handleGenerateBlogs = async (event) => {
+    let finishedCount = 0;
+    for (let c of savedCountries) {
+      let generateParams = {
+        'country': c
+      };
+      axios.post(`${API_ROUTE}/generate_blogs`, generateParams, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then((res) => {
+        finishedCount += 1;
+        setBlogDoneCount(finishedCount);
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+  };
+
   useEffect(() => {
     axios.post(`${API_ROUTE}/account`, {}, {
       headers: {
@@ -94,6 +118,17 @@ function Account() {
       setName(res.data.name);
       setBio(res.data.bio);
       setCountries(res.data.countries);
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    axios.post(`${API_ROUTE}/get_countries`, {}, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then((res) => {
+      setSavedCountries(res.data);
+      setBlogTotalCount(res.data.length);
     }).catch((err) => {
       console.log(err);
     });
@@ -126,6 +161,10 @@ function Account() {
               <div>{accountStatus}</div>
             )}
           </div>
+        </div>
+        <div className="account-grid-item account-dashboard-sec">
+          <button onClick={handleGenerateBlogs}>Generate Blogs</button>
+          <LoadingBar progress={blogDoneCount} total={blogTotalCount} />
         </div>
         <div className="account-grid-item account-book-sec">
           <div className="form-wrapper">
