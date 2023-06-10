@@ -42,6 +42,10 @@ function Blog() {
   const handleCountryMouseLeave = (event) => {
     setHoverCountry([]);
   };
+  const handleBack = (event) => {
+    setSelectedCountry('');
+    setBlogData([]);
+  }
 
   //Calendar functions
   const onCalendarChange = (nextValue) => {
@@ -146,6 +150,7 @@ function Blog() {
             <h4>{blogData[curBlog].date}</h4>
             <h5>In: {blogData[curBlog].location}</h5>
             <h5># of images: {blogData[curBlog].media_count}</h5>
+            <h1 className="blog-back-button" onClick={handleBack}>&larr;</h1>
           </div>
           <div className="blog-grid-item blog-content">
             <div className={`blog-content-grid-${blogData[curBlog].media_count < 16 ? "few" : "many"}img`}>

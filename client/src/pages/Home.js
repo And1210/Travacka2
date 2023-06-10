@@ -72,6 +72,7 @@ function Home() {
     <div>
       <div className="banner-container">
         <img className="banner-img" src={bannerImg} />
+        <div className="home-title">Where The Heck Did Andrew Go?</div>
       </div>
       <div className="container">
         <div className="grid-container">

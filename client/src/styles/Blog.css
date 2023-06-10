@@ -7,6 +7,7 @@
 }
 
 .blog-grid-item {
+  position: relative;
   padding: 10px;
   margin: 10px 5px;
   margin-top: 0;
@@ -20,6 +21,14 @@
 .blog-title {
   grid-area: 1 / 2 / 2 / 3;
   margin-right: 0;
+  text-align: right;
+}
+
+.blog-back-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  cursor: pointer;
 }
 
 .blog-content {
@@ -50,11 +59,11 @@
 }
 
 .blog-post-fewimg {
-  grid-area: 1 / 2 / 3 / 3;
+  grid-area: 1 / 2 / 2 / 3;
 }
 
 .blog-post-manyimg {
-  grid-area: 1 / 2 / 3 / 5;
+  grid-area: 1 / 2 / 2 / 5;
 }
 
 .blog-image {
