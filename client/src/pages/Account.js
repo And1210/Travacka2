@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import SelectionMap from '../components/SelectionMap.js';
 import LoadingBar from '../components/LoadingBar.js';
+import BlogSetupBox from '../components/BlogSetupBox.js';
 
 import '../styles/Account.css';
 
@@ -23,6 +24,7 @@ function Account() {
 
   const [blogDoneCount, setBlogDoneCount] = useState(0);
   const [blogTotalCount, setBlogTotalCount] = useState(1);
+  const [editBlogs, setEditBlogs] = useState([]);
 
   const handleCountryClick = (name) => {
     let tmpCountries = [...countries];
@@ -109,6 +111,41 @@ function Account() {
     }
   };
 
+  const handleEditBlogSetup = (event) => {
+    let query = {
+      country: event.target.id
+    };
+    axios.post(`${API_ROUTE}/get_blogs`, query, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then((res) => {
+      setEditBlogs(res.data);
+    }).catch((err) => {
+      console.log(err);
+    });
+  };
+
+  let handleEditBlog = (date, post) => {
+    let dateData = new Date(date);
+    dateData.setHours(0, 0, 0, 0);
+    dateData = dateData.getTime();
+    let data = {
+      date: dateData,
+      post: post
+    };
+    
+    axios.post(`${API_ROUTE}/edit_blog`, data, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then((res) => {
+      console.log(res);
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
+
   useEffect(() => {
     axios.post(`${API_ROUTE}/account`, {}, {
       headers: {
@@ -165,6 +202,14 @@ function Account() {
         <div className="account-grid-item account-dashboard-sec">
           <button onClick={handleGenerateBlogs}>Generate Blogs</button>
           <LoadingBar progress={blogDoneCount} total={blogTotalCount} />
+          {savedCountries.map((country) =>
+            <button id={country} onClick={handleEditBlogSetup}>{country}</button>
+          )}
+          {editBlogs.length > 0 && (
+            editBlogs.map((blog) =>
+              <BlogSetupBox dateData={blog} cmRoute={API_ROUTE} cb={handleEditBlog}/>
+            )
+          )}
         </div>
         <div className="account-grid-item account-book-sec">
           <div className="form-wrapper">

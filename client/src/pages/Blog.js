@@ -3,6 +3,7 @@ import axios from 'axios';
 import Calendar from 'react-calendar';
 
 import SelectionMap from '../components/SelectionMap.js';
+import ImageModal from '../components/ImageModal.js';
 
 import '../styles/Blog.css';
 
@@ -21,6 +22,8 @@ function Blog() {
   //Blog variables
   const [blogData, setBlogData] = useState([]);
   const [curBlog, setCurBlog] = useState(0);
+  //Image displaying
+  const [imgModalSrc, setImgModalSrc] = useState(null);
 
   //Country selection functions
   const handleCountryClick = (event) => {
@@ -56,6 +59,14 @@ function Blog() {
     if (view == 'month') {
       return !availableDates.includes(date.getTime());
     }
+  };
+
+  //Image display functions
+  const handleImgClick = (event) => {
+    setImgModalSrc(event.target.currentSrc);
+  };
+  const handleCloseModal = (event) => {
+    setImgModalSrc(null);
   };
 
   //Effects
@@ -102,6 +113,9 @@ function Blog() {
 
   return (
     <div>
+      {imgModalSrc && (
+        <ImageModal src={imgModalSrc} onClose={handleCloseModal} />
+      )}
       {selectedCountry.length == 0 && (
         <div className="gallery-selection-grid">
           <div className="gallery-selection-item">
@@ -140,7 +154,7 @@ function Blog() {
               </div>
               {blogData[curBlog].img_urls.map((url) =>
                 <div className="blog-content-grid-item">
-                  <img className="blog-image" src={`${API_ROUTE}/${url}`} />
+                  <img className="blog-image" onClick={handleImgClick} src={`${API_ROUTE}/${url}`} />
                 </div>
               )}
             </div>

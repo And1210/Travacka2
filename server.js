@@ -341,6 +341,33 @@ server.post('/get_blogs', (req, res, next) => {
     });
 });
 
+server.post('/edit_blog', (req, res, next) => {
+  const {date, post} = req.body;
+
+  const query = {
+    date: {
+      $gte: new Date(date-86400000/2),
+      $lte: new Date(date+86400000/2)
+    }
+  };
+
+  const update = {
+    post: post
+  };
+
+  Blog.updateOne(query, update)
+    .then((result) => {
+      res.json({
+        message: 'Post updated successfully',
+        success: true
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.json(err);
+    });
+});
+
 server.listen(PORT, () => {
   console.log(`Travacka2 API is listening on port ${PORT}`);
 });
