@@ -4,6 +4,7 @@ import axios from 'axios';
 import DestinationMap from '../components/DestinationMap.js';
 import BookCard from '../components/BookCard.js';
 import FlowFieldBG from '../components/FlowFieldBG.js';
+import TravelBG from '../components/TravelBG.js';
 
 import '../styles/Home.css';
 
@@ -65,10 +66,10 @@ function Home() {
       console.log(err);
     })
   }, []);
-  
   // <div className="background-sketch">
-  //   <FlowFieldBG />
+  // <TravelBG />
   // </div>
+
   return (
     <div>
       <div className="banner-container">

@@ -3,6 +3,7 @@ import axios from 'axios';
 import {usePagination} from 'react-use-pagination';
 
 import SelectionMap from '../components/SelectionMap.js';
+import TravelBG from '../components/TravelBG.js';
 
 import '../styles/Gallery.css';
 
@@ -86,6 +87,9 @@ function Gallery() {
     })
   }, []);
 
+  // <div className="background-sketch">
+  // <TravelBG />
+  // </div>
   return (
     <div>
       {selectedCountry.length == 0 && (
