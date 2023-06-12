@@ -58,6 +58,19 @@ function Account() {
     });
   };
 
+  const handleGenerateSmallImages = (event) => {
+    axios.post(`${API_ROUTE}/generate_small_imgs`, {}, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then((res) => {
+      setAccountStatus(res.data.message);
+    }).catch((err) => {
+      console.log(err);
+      setAccountStatus('Error occured');
+    });
+  }
+
   const handleBookSubmit = (event) => {
     event.preventDefault();
 
@@ -134,7 +147,7 @@ function Account() {
       date: dateData,
       post: post
     };
-    
+
     axios.post(`${API_ROUTE}/edit_blog`, data, {
       headers: {
         'Content-Type': 'application/json'
@@ -191,6 +204,7 @@ function Account() {
               <label>Bio:</label><textarea name="bio" defaultValue={bio || ''} onChange={(event) => setBio(event.target.value)} required />
               <button type="submit">Update</button>
             </form>
+            <button onClick={handleGenerateSmallImages}>Generate Small Images</button>
             <div className="account-countries-container">
               <SelectionMap desiredCountries={countries} onCountryClick={handleCountryClick}/>
             </div>

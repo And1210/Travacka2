@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path')
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
+const jimp = require('jimp');
 
 require('dotenv').config();
 
@@ -177,6 +178,34 @@ server.post('/upload_img', upload.single('img'), async (req, res, next) => {
 
 });
 
+server.post('/generate_small_imgs', (req, res, next) => {
+  fs.readdir(path.join(__dirname, './uploads'), async (err, files) => {
+    if (err)
+      console.log(err);
+
+    let count = 0;
+    let total = files.length;
+    for (let f of files) {
+      try {
+        let curPath = path.join(__dirname, './uploads', f);
+        let newPath = curPath.replace('uploads/', 'uploads-256/').replace('uploads\\', 'uploads-256\\');
+        const imageResize = await jimp.read(curPath).then((image) => {
+          image.scaleToFit(256, 256, (err) => {
+            if (err) console.log(err);
+          }).write(newPath);
+        }).catch((err) => {
+          console.log(err);
+        });
+        count += 1;
+      } catch(err) {
+        console.log(err);
+      }
+    }
+
+    res.json({message: `${count}/${total} small images successfully generated`, success: true});
+  });
+});
+
 server.post('/get_imgs', (req, res, next) => {
   const {location} = req.body;
 
@@ -214,6 +243,7 @@ server.post('/get_countries', (req, res, next) => {
       console.log(err);
     });
 });
+
 
 //Books
 server.post('/add_book', (req, res, next) => {
