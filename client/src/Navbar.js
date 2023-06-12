@@ -24,6 +24,7 @@ const NavLinks = styled.ul`
   display: flex;
   align-items: center;
   padding-inline-start: 0;
+  font-family: ElegantTypewriter;
 `;
 
 const NavLink = styled(Link)`

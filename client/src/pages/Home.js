@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import DestinationMap from '../components/DestinationMap.js';
 import BookCard from '../components/BookCard.js';
+import FlowFieldBG from '../components/FlowFieldBG.js';
 
 import '../styles/Home.css';
 
@@ -64,9 +65,9 @@ function Home() {
       console.log(err);
     })
   }, []);
-
-  // <div className="page-title center-text-img">
-  //   Where the Hell Did Andrew Go?
+  
+  // <div className="background-sketch">
+  //   <FlowFieldBG />
   // </div>
   return (
     <div>
