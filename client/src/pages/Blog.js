@@ -4,6 +4,7 @@ import Calendar from 'react-calendar';
 
 import SelectionMap from '../components/SelectionMap.js';
 import ImageModal from '../components/ImageModal.js';
+import CalendarContainer from '../components/CalendarContainer.js';
 
 import '../styles/Blog.css';
 
@@ -63,6 +64,18 @@ function Blog() {
     if (view == 'month') {
       return !availableDates.includes(date.getTime());
     }
+  };
+
+  //Title functions
+  const dateToStr = (date) => {
+    let dateObj = new Date(date);
+    let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    let days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    let day = days[dateObj.getUTCDay()];
+    let month = months[dateObj.getUTCMonth()];
+    let month_day = dateObj.getUTCDate();
+    let year = dateObj.getUTCFullYear();
+    return `${day} ${month} ${month_day}, ${year}`;
   };
 
   //Image display functions
@@ -139,23 +152,25 @@ function Blog() {
       )}
       {selectedCountry.length > 0 && blogData.length > 0 && (
         <div className="blog-grid">
-          <div className="blog-grid-item blog-menu">
+          <div className="blog-grid-item blog-grid-menu">
             {availableDates.length > 0 && (
               <div>
-                <Calendar onChange={onCalendarChange} value={calendar} defaultActiveStartDate={new Date(availableDates[0])} tileDisabled={dateDisabled} />
+                <CalendarContainer>
+                  <Calendar onChange={onCalendarChange} value={calendar} defaultActiveStartDate={new Date(availableDates[0])} tileDisabled={dateDisabled} />
+                </CalendarContainer>
               </div>
             )}
           </div>
-          <div className="blog-grid-item blog-title">
-            <h4>{blogData[curBlog].date}</h4>
-            <h5>In: {blogData[curBlog].location}</h5>
-            <h5># of images: {blogData[curBlog].media_count}</h5>
+          <div className="blog-grid-item blog-grid-title">
+            <div className="blog-title">{dateToStr(blogData[curBlog].date)}</div>
+            <div className="blog-subtitle">Location: {blogData[curBlog].location}</div>
+            <div className="blog-subtitle"># of images: {blogData[curBlog].media_count}</div>
             <h1 className="blog-back-button" onClick={handleBack}>&larr;</h1>
           </div>
-          <div className="blog-grid-item blog-content">
+          <div className="blog-grid-item blog-grid-content">
             <div className={`blog-content-grid-${blogData[curBlog].media_count < 16 ? "few" : "many"}img`}>
               <div className={`blog-content-grid-item blog-post-${blogData[curBlog].media_count < 16 ? "few" : "many"}img`}>
-                <div>{blogData[curBlog].post}</div>
+                <div className="blog-post-text">{blogData[curBlog].post}</div>
               </div>
               {blogData[curBlog].img_urls.map((url) =>
                 <div className="blog-content-grid-item">

@@ -79,22 +79,24 @@ function Home() {
           {personal.bio && (
             <div className="grid-item bio-sec">
               <img className="headshot-img" src={headshot} alt="Picture" />
-              <h1>{personal.name || 'Error'}</h1>
-              {personal.bio.split(/\r?\n/).map((text) =>
-                <p className="bio-text">{text || 'Error loading data from server'}</p>
-              )}
+              <div className="home-subtitle">{personal.name || 'Error'}</div>
+              <div className="home-body-text">
+                {personal.bio.split(/\r?\n/).map((text) =>
+                  <p className="bio-text">{text || 'Error loading data from server'}</p>
+                )}
+              </div>
             </div>
           )}
 
           <div className="grid-item countries-sec">
-            <div className="countries-container">
+            <div className="countries-container home-body-text">
               <DestinationMap desiredCountries={personal.countries} visitedCountries={visitedCountries} />
             </div>
           </div>
 
           <div className="grid-item books-sec">
-            <h3>The Books I've Read (count: {bookData.length})</h3>
-            <div className="books-container">
+            <div className="book-title">The Books I've Read (count: {bookData.length})</div>
+            <div className="books-container home-body-text">
               {bookData.map((book) =>
                 <BookCard title={book.title} author={book.author} url={book.url} />
               )}

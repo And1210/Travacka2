@@ -26,7 +26,7 @@ function BookCard({title, author, url}) {
           <CoverImage src={url} />
         </CardItem>
         <CardItem>
-          <div>{title}</div>
+          <div style={{'fontWeight': 'bold'}}>{title}</div>
           <div>by {author}</div>
         </CardItem>
       </CardContainer>

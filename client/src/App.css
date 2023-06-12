@@ -31,3 +31,13 @@
   position: static;
   /* cursor: zoom-out; */
 }
+
+/* Fonts */
+@font-face {
+  font-family: 'Valeria';
+  src: local('ValeriaBoldGrunge'), url('./fonts/ValeriaBoldGrunge.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'ElegantTypewriter';
+  src: local('ElegantTypewriterRegular'), url('./fonts/ELEGANT_TYPEWRITER_Regular.ttf') format('truetype');
+}

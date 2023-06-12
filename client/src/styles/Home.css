@@ -17,26 +17,27 @@
 
 .home-title {
   position: absolute;
-  font-size: 5rem;
+  font-size: 8vw;
   font-weight: bold;
-  color: #FFFFFF;
+  color: #000;
   text-shadow:
-		-1px -1px 10px rgba(0, 0, 0, 0.25),
-		1px -1px 10px rgba(0, 0, 0, 0.25),
-		-1px 1px 10px rgba(0, 0, 0, 0.25),
-		1px 1px 10px rgba(0, 0, 0, 0.25);
+		-1px -1px 10px rgba(255, 255, 255, 0.25),
+		1px -1px 10px rgba(255, 255, 255, 0.25),
+		-1px 1px 10px rgba(255, 255, 255, 0.25),
+		1px 1px 10px rgba(255, 255, 255, 0.25);
 
-  width: 100%;
+  width: 90%;
   left: 50%;
   top: 35%;
   transform: translate(-50%, -50%);
+  font-family: Valeria;
 }
 
 /* Grid Stuff */
 .grid-container {
   height: 100%;
   display: grid;
-  grid-template-rows: 50vh 60vh;
+  grid-template-rows: 50vh auto;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 0px;
 }
@@ -60,6 +61,17 @@
   object-fit: cover;
   width: 200px;
   height: 200px;
+}
+
+.home-subtitle {
+  margin: 10px 0;
+  font-size: 2.5rem;
+  font-family: ElegantTypewriter;
+}
+
+.home-body-text {
+  font-size: 1rem;
+  font-family: ElegantTypewriter;
 }
 
 /* map of travelled areas */
@@ -86,6 +98,13 @@
 /* books i've read section */
 .books-sec {
   grid-area: 2 / 2 / 3 / 4;
+  max-height: 65vh;
+}
+
+.book-title {
+  font-size: 3vw;
+  margin: 10px 0;
+  font-family: ElegantTypewriter;
 }
 
 .books-container {
