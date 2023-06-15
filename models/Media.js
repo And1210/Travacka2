@@ -23,6 +23,9 @@ const MediaSchema = new mongoose.Schema({
   thumbnail_url: {
     type: String
   },
+  thumbnail_large_url: {
+    type: String
+  },
   coords: {
     type: Array
   },

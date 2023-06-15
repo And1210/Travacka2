@@ -160,12 +160,13 @@ server.post('/upload_img', upload.single('img'), async (req, res, next) => {
     description: '',
     url: `uploads/${req.file.filename}`,
     thumbnail_url: `uploads-256/${req.file.filename}`,
+    thumbnail_large_url: `uploads-512/${req.file.filename}`,
     coords: coords,
     location: location
   };
 
   //Resize and save image
-  const pythonProcess = spawn('python', ['./image_resize_single.py', dataObj.url, dataObj.thumbnail_url]);
+  const pythonProcess = spawn('python', ['./image_resize_single.py', dataObj.url]);
   pythonProcess.on('close', (code) => {
   });
 
@@ -173,7 +174,7 @@ server.post('/upload_img', upload.single('img'), async (req, res, next) => {
   Media.create(dataObj)
     .then((result) => {
       res.json({
-        'message': 'Successfully upload image',
+        'message': 'Successfully uploaded image',
         'success': true
       });
     })
@@ -316,14 +317,14 @@ server.post('/generate_blogs', (req, res, next) => {
           date_data[date_str].date = date_str;
           date_data[date_str].media_count = 1;
           date_data[date_str].img_urls = [r.url];
-          date_data[date_str].thumbnail_urls = [r.thumbnail_url];
+          date_data[date_str].thumbnail_urls = [r.thumbnail_large_url];
           date_data[date_str].coords = r.coords;
           date_data[date_str].location = country;
         } else {
           date_data[date_str].media_count += 1;
           if (!r.url.includes('.mp4')) {
             date_data[date_str].img_urls.push(r.url);
-            date_data[date_str].thumbnail_urls.push(r.thumbnail_url);
+            date_data[date_str].thumbnail_urls.push(r.thumbnail_large_url);
 
             let cur_coord = date_data[date_str].coords;
             let weight_fac = date_data[date_str].img_urls.length/(date_data[date_str].img_urls.length+1);
