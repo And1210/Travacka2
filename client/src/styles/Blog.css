@@ -52,6 +52,7 @@
   display: grid;
   grid-template-columns: repeat(3, 33vw);
   grid-template-rows: repeat(3, 33vh);
+  grid-auto-rows: 33vh;
   grid-gap: 0px;
   justify-content: center;
 }
@@ -59,7 +60,8 @@
 .blog-content-grid-manyimg {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 50vh);
+  grid-auto-rows: 33vh;
   grid-gap: 0px;
   justify-content: center;
 }
@@ -73,11 +75,35 @@
 }
 
 .blog-post-fewimg {
-  grid-area: 1 / 2 / 2 / 3;
+  grid-area: 1 / 2 / 3 / 3;
+  overflow: auto;
+  white-space: break-spaces;
 }
 
 .blog-post-manyimg {
   grid-area: 1 / 2 / 2 / 5;
+  overflow-y: auto;
+  white-space: break-spaces;
+}
+
+.paper-effect {
+  position: relative;
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  padding: 25px 0 0 40px;
+  background-image: repeating-linear-gradient(white 0px, white 24px, teal 25px);
+  line-height: 25px;
+  text-align: justify;
+}
+.paper-effect::before {
+  position: absolute;
+  top: 0;
+  left: 30px;
+  content: '';
+  width: 2px;
+  height: 100%;
+  background-color: rgba(255,0,0,0.6);
 }
 
 .blog-image {

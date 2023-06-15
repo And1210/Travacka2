@@ -80,7 +80,7 @@ function Blog() {
 
   //Image display functions
   const handleImgClick = (event) => {
-    setImgModalSrc(event.target.currentSrc);
+    setImgModalSrc(`${API_ROUTE}/${blogData[curBlog].img_urls[parseInt(event.target.id)]}`);
   };
   const handleCloseModal = (event) => {
     setImgModalSrc(null);
@@ -169,12 +169,16 @@ function Blog() {
           </div>
           <div className="blog-grid-item blog-grid-content">
             <div className={`blog-content-grid-${blogData[curBlog].media_count < 16 ? "few" : "many"}img`}>
-              <div className={`blog-content-grid-item blog-post-${blogData[curBlog].media_count < 16 ? "few" : "many"}img`}>
-                <div className="blog-post-text">{blogData[curBlog].post}</div>
-              </div>
-              {blogData[curBlog].img_urls.map((url) =>
+              {blogData[curBlog].post.length > 0 && (
+                <div className={`blog-content-grid-item blog-post-${blogData[curBlog].media_count < 16 ? "few" : "many"}img`}>
+                  <div className="paper-effect">
+                    <div className="blog-post-text">{blogData[curBlog].post}</div>
+                  </div>
+                </div>
+              )}
+              {blogData[curBlog].thumbnail_urls.map((url, i) =>
                 <div className="blog-content-grid-item">
-                  <img className="blog-image" onClick={handleImgClick} src={`${API_ROUTE}/${url}`} />
+                  <img id={`${i}`} className="blog-image" onClick={handleImgClick} src={`${API_ROUTE}/${url}`} />
                 </div>
               )}
             </div>

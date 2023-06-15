@@ -18,6 +18,7 @@ server.use(express.urlencoded({extended: true}));
 //Image serving
 server.use('/uploads', express.static('uploads'));
 server.use('/uploads-256', express.static('uploads-256'));
+server.use('/uploads-512', express.static('uploads-512'));
 
 //ENV constants
 const PORT = process.env.PORT || 5000;
@@ -194,7 +195,7 @@ server.post('/generate_small_imgs', (req, res, next) => {
     let count = 0;
     let total = files.length;
 
-    const pythonProcess = spawn('python', ['./image_resize.py', './uploads', './uploads-256']);
+    const pythonProcess = spawn('python', ['./image_resize.py', './uploads', './uploads-512']);
 
     pythonProcess.on('close', (code) => {
       res.json({message: `Small images generated with code ${code}`, success: true});
@@ -315,12 +316,14 @@ server.post('/generate_blogs', (req, res, next) => {
           date_data[date_str].date = date_str;
           date_data[date_str].media_count = 1;
           date_data[date_str].img_urls = [r.url];
+          date_data[date_str].thumbnail_urls = [r.thumbnail_url];
           date_data[date_str].coords = r.coords;
           date_data[date_str].location = country;
         } else {
           date_data[date_str].media_count += 1;
           if (!r.url.includes('.mp4')) {
             date_data[date_str].img_urls.push(r.url);
+            date_data[date_str].thumbnail_urls.push(r.thumbnail_url);
 
             let cur_coord = date_data[date_str].coords;
             let weight_fac = date_data[date_str].img_urls.length/(date_data[date_str].img_urls.length+1);
@@ -411,13 +414,14 @@ server.post('/edit_blog', (req, res, next) => {
 });
 
 server.post('/update_blog_urls', (req, res, next) => {
+  console.log('Updating blog urls...');
   Blog.find({})
     .then(async (result) => {
-      for (let r of result) {
+      for (let r of tqdm(result)) {
         let curUrls = r.img_urls;
         let newUrls = [];
         for (let u of curUrls) {
-          newUrls.push(u.replace('uploads/', 'uploads-256/'));
+          newUrls.push(u.replace('uploads/', 'uploads-512/'));
         }
         await Blog.findOneAndUpdate({_id: r.id}, {thumbnail_urls: newUrls});
       }

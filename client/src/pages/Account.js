@@ -170,7 +170,20 @@ function Account() {
     }).catch((err) => {
       console.log(err);
     });
-  }
+  };
+
+  const handleUpdateBlogURLs = (event) => {
+    axios.post(`${API_ROUTE}/update_blog_urls`, {}, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then((res) => {
+      setAccountStatus(res.data.message);
+    }).catch((err) => {
+      console.log(err);
+      setAccountStatus('Error occured');
+    });
+  };
 
   useEffect(() => {
     axios.post(`${API_ROUTE}/account`, {}, {
@@ -229,6 +242,7 @@ function Account() {
         </div>
         <div className="account-grid-item account-dashboard-sec">
           <button onClick={handleGenerateBlogs}>Generate Blogs</button>
+          <button onClick={handleUpdateBlogURLs}>Update Blog URLs</button>
           <LoadingBar progress={blogDoneCount} total={blogTotalCount} />
           {savedCountries.map((country) =>
             <button id={country} onClick={handleEditBlogSetup}>{country}</button>
