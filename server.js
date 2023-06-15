@@ -209,7 +209,8 @@ server.post('/update_img_urls', (req, res, next) => {
   Media.find({media_type: 'IMAGE'})
     .then(async (result) => {
       for (let r of tqdm(result)) {
-        await Media.findOneAndUpdate({_id: r.id}, {thumbnail_url: r.url.replace('uploads/', 'uploads-256/')});
+        await Media.findOneAndUpdate({_id: r.id}, {thumbnail_url: r.url.replace('uploads/', 'uploads-256/'),
+                                                   thumbnail_large_url: r.url.replace('uploads/', 'uploads-512/')});
       }
       console.log('Done!');
       res.json({message: 'Updated image urls successfully', success: true});
