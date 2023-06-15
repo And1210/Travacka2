@@ -13,6 +13,9 @@ const BlogSchema = new mongoose.Schema({
     type: Array,
     required: true
   },
+  thumbnail_urls: {
+    type: Array
+  },
   coords: {
     type: Array,
     default: []

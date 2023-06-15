@@ -20,6 +20,9 @@ const MediaSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  thumbnail_url: {
+    type: String
+  },
   coords: {
     type: Array
   },

@@ -6,7 +6,8 @@ const fs = require('fs');
 const path = require('path')
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
-const jimp = require('jimp');
+const {spawn} = require('child_process');
+const tqdm = require('tqdm');
 
 require('dotenv').config();
 
@@ -16,6 +17,7 @@ server.use(express.urlencoded({extended: true}));
 
 //Image serving
 server.use('/uploads', express.static('uploads'));
+server.use('/uploads-256', express.static('uploads-256'));
 
 //ENV constants
 const PORT = process.env.PORT || 5000;
@@ -156,9 +158,15 @@ server.post('/upload_img', upload.single('img'), async (req, res, next) => {
     filename: req.file.filename,
     description: '',
     url: `uploads/${req.file.filename}`,
+    thumbnail_url: `uploads-256/${req.file.filename}`,
     coords: coords,
     location: location
   };
+
+  //Resize and save image
+  const pythonProcess = spawn('python', ['./image_resize_single.py', dataObj.url, dataObj.thumbnail_url]);
+  pythonProcess.on('close', (code) => {
+  });
 
   //Write to db
   Media.create(dataObj)
@@ -185,26 +193,30 @@ server.post('/generate_small_imgs', (req, res, next) => {
 
     let count = 0;
     let total = files.length;
-    for (let f of files) {
-      try {
-        let curPath = path.join(__dirname, './uploads', f);
-        let newPath = curPath.replace('uploads/', 'uploads-256/').replace('uploads\\', 'uploads-256\\');
-        const imageResize = await jimp.read(curPath).then((image) => {
-          image.scaleToFit(256, 256, (err) => {
-            if (err) console.log(err);
-          }).write(newPath);
-        }).catch((err) => {
-          console.log(err);
-        });
-        count += 1;
-      } catch(err) {
-        console.log(err);
-      }
-    }
 
-    res.json({message: `${count}/${total} small images successfully generated`, success: true});
+    const pythonProcess = spawn('python', ['./image_resize.py', './uploads', './uploads-256']);
+
+    pythonProcess.on('close', (code) => {
+      res.json({message: `Small images generated with code ${code}`, success: true});
+    });
   });
 });
+
+server.post('/update_img_urls', (req, res, next) => {
+  console.log('Beginning update of img urls...');
+  Media.find({media_type: 'IMAGE'})
+    .then(async (result) => {
+      for (let r of tqdm(result)) {
+        await Media.findOneAndUpdate({_id: r.id}, {thumbnail_url: r.url.replace('uploads/', 'uploads-256/')});
+      }
+      console.log('Done!');
+      res.json({message: 'Updated image urls successfully', success: true});
+    })
+    .catch((err) => {
+      console.log(err);
+      res.json(err);
+    });
+})
 
 server.post('/get_imgs', (req, res, next) => {
   const {location} = req.body;
@@ -391,6 +403,25 @@ server.post('/edit_blog', (req, res, next) => {
         message: 'Post updated successfully',
         success: true
       });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.json(err);
+    });
+});
+
+server.post('/update_blog_urls', (req, res, next) => {
+  Blog.find({})
+    .then(async (result) => {
+      for (let r of result) {
+        let curUrls = r.img_urls;
+        let newUrls = [];
+        for (let u of curUrls) {
+          newUrls.push(u.replace('uploads/', 'uploads-256/'));
+        }
+        await Blog.findOneAndUpdate({_id: r.id}, {thumbnail_urls: newUrls});
+      }
+      res.json({message: 'Blog urls updated successfully', success: true})
     })
     .catch((err) => {
       console.log(err);

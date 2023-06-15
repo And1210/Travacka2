@@ -71,6 +71,19 @@ function Account() {
     });
   }
 
+  const handleUpdateImageURLs = (event) => {
+    axios.post(`${API_ROUTE}/update_img_urls`, {}, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then((res) => {
+      setAccountStatus(res.data.message);
+    }).catch((err) => {
+      console.log(err);
+      setAccountStatus('Error occured');
+    });
+  }
+
   const handleBookSubmit = (event) => {
     event.preventDefault();
 
@@ -205,6 +218,7 @@ function Account() {
               <button type="submit">Update</button>
             </form>
             <button onClick={handleGenerateSmallImages}>Generate Small Images</button>
+            <button onClick={handleUpdateImageURLs}>Update Image Links</button>
             <div className="account-countries-container">
               <SelectionMap desiredCountries={countries} onCountryClick={handleCountryClick}/>
             </div>

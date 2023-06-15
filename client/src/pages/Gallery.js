@@ -116,7 +116,7 @@ function Gallery() {
             <div className="gallery-image-grid">
               {imgData.slice(startIndex, startIndex+pageSize).map((img) =>
                 <div className="gallery-image-item">
-                  <img className="gallery-image" src={`${API_ROUTE}/${img.url}`} />
+                  <img className="gallery-image" src={`${API_ROUTE}/${img.thumbnail_url}`} />
                 </div>
               )}
             </div>

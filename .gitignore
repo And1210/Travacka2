@@ -2,6 +2,7 @@ node_modules
 package-lock.json
 .env
 uploads
+uploads-256
 
 client/node_modules
 client/package-lock.json
