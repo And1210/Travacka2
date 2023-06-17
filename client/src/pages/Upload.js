@@ -29,6 +29,8 @@ function Upload() {
     setTotalCount(total_count);
     let progress_count = 0;
 
+    let updated_locations = new Set();
+
     for (let i = 0; i < imgData.length; i++) {
       const formData = new FormData();
 
@@ -46,19 +48,32 @@ function Upload() {
 
       formData.append('date', imgData[i].lastModified);
 
-      axios.post(`${API_ROUTE}/upload_img`, formData, {
+      await axios.post(`${API_ROUTE}/upload_img`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       }).then((res) => {
         progress_count += 1;
         setProgressCount(progress_count);
+        updated_locations.add(res.location);
       }).catch((err) => {
         console.log(err);
         progress_count += 1;
         setProgressCount(progress_count);
       });
     }
+
+    updated_locations.forEach((country) => {
+      axios.post(`${API_ROUTE}/generate_blogs`, {country: country}, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then((res) => {
+        console.log(res);
+      }).catch((err) => {
+        console.log(err);
+      });
+    });
   };
 
   return (

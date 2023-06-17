@@ -175,6 +175,7 @@ server.post('/upload_img', upload.single('img'), async (req, res, next) => {
     .then((result) => {
       res.json({
         'message': 'Successfully uploaded image',
+        'location': location,
         'success': true
       });
     })
@@ -182,6 +183,7 @@ server.post('/upload_img', upload.single('img'), async (req, res, next) => {
       console.log(err);
       res.json({
         'message': 'Failed to save image data',
+        'error': err,
         'success': false
       });
     });
